@@ -33,7 +33,7 @@ const [randomColor1, randomColor2] = [randomColor(), randomColor()];
 
 export default function TokenPage({ nft, contractMetadata }: Props) {
   const router=useRouter();
-  const collectionAddr=router.query.collection;
+  const collectionAddr=router.query.collection as string;
 
   const [bidValue, setBidValue] = useState<string>();
 

@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 export default function Buy() {
   // Load all of the NFTs from the NFT Collection
   const router=useRouter();
-  const collection = router.query.collection;
+  const collection = router.query.collection as string;
   const { contract } = useContract(collection);
   const { data, isLoading } = useNFTs(contract);
   console.log(collection);

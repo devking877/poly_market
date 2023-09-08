@@ -14,9 +14,9 @@ import { useRouter } from "next/router";
 
 export default function Sell() {
   const router = useRouter();
-  const collectionAddr=router.query.collection;
+  const collection=router.query.collection as string;
   // Load all of the NFTs from the NFT Collection
-  const { contract } = useContract(collectionAddr);
+  const { contract } = useContract(collection);
   const address = useAddress();
   const { data, isLoading } = useOwnedNFTs(contract, address);
 
