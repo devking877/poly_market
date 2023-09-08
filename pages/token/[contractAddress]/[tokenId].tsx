@@ -15,7 +15,6 @@ import {
   ETHERSCAN_URL,
   MARKETPLACE_ADDRESS,
   NETWORK,
-  NFT_COLLECTION_ADDRESS,
 } from "../../../const/contractAddresses";
 import styles from "../../../styles/Token.module.css";
 import Link from "next/link";
@@ -23,6 +22,7 @@ import randomColor from "../../../util/randomColor";
 import Skeleton from "../../../components/Skeleton/Skeleton";
 import toast, { Toaster } from "react-hot-toast";
 import toastStyle from "../../../util/toastConfig";
+import { useRouter } from "next/router";
 
 type Props = {
   nft: NFT;
@@ -32,6 +32,9 @@ type Props = {
 const [randomColor1, randomColor2] = [randomColor(), randomColor()];
 
 export default function TokenPage({ nft, contractMetadata }: Props) {
+  const router=useRouter();
+  const {collectionAddr} = router.query;
+
   const [bidValue, setBidValue] = useState<string>();
 
   // Connect to marketplace smart contract
@@ -41,18 +44,18 @@ export default function TokenPage({ nft, contractMetadata }: Props) {
   );
 
   // Connect to NFT Collection smart contract
-  const { contract: nftCollection } = useContract(NFT_COLLECTION_ADDRESS);
+  const { contract: nftCollection } = useContract(collectionAddr);
 
   const { data: directListing, isLoading: loadingDirect } =
     useValidDirectListings(marketplace, {
-      tokenContract: NFT_COLLECTION_ADDRESS,
+      tokenContract: collectionAddr,
       tokenId: nft.metadata.id,
     });
 
   // 2. Load if the NFT is for auction
   const { data: auctionListing, isLoading: loadingAuction } =
     useValidEnglishAuctions(marketplace, {
-      tokenContract: NFT_COLLECTION_ADDRESS,
+      tokenContract: collectionAddr,
       tokenId: nft.metadata.id,
     });
 
@@ -85,7 +88,7 @@ export default function TokenPage({ nft, contractMetadata }: Props) {
       );
     } else if (directListing?.[0]) {
       txResult = await marketplace?.offers.makeOffer({
-        assetContractAddress: NFT_COLLECTION_ADDRESS,
+        assetContractAddress: collectionAddr,
         tokenId: nft.metadata.id,
         totalPrice: bidValue,
       });
@@ -356,12 +359,14 @@ export default function TokenPage({ nft, contractMetadata }: Props) {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const tokenId = context.params?.tokenId as string;
+  const collectionAddr = context.params?.contractAddress as string;
+  console.log("address:", collectionAddr);
 
   const sdk = new ThirdwebSDK(NETWORK, {
     secretKey: process.env.TW_SECRET_KEY,
   });
 
-  const contract = await sdk.getContract(NFT_COLLECTION_ADDRESS);
+  const contract = await sdk.getContract(collectionAddr);
 
   const nft = await contract.erc721.get(tokenId);
 
@@ -381,18 +386,19 @@ export const getStaticProps: GetStaticProps = async (context) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const sdk = new ThirdwebSDK(NETWORK, {
-    secretKey: process.env.TW_SECRET_KEY,
-  });
+  // const sdk = new ThirdwebSDK(NETWORK, {
+  //   secretKey: process.env.TW_SECRET_KEY,
+  // });
 
-  const contract = await sdk.getContract(NFT_COLLECTION_ADDRESS);
+  // const contract = await sdk.getContract(collectionAddr);
 
-  const nfts = await contract.erc721.getAll();
+  // const nfts = await contract.erc721.getAll();
+  const nfts=[];
 
   const paths = nfts.map((nft) => {
     return {
       params: {
-        contractAddress: NFT_COLLECTION_ADDRESS,
+        contractAddress: collectionAddr,
         tokenId: nft.metadata.id,
       },
     };

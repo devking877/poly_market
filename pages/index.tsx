@@ -56,7 +56,7 @@ const Home: NextPage = () => {
               </p>
 
               <div className={styles.heroCtaContainer}>
-                <Link className={styles.heroCta} href="/buy">
+                <Link className={styles.heroCta} href="/collections">
                   Get Started
                 </Link>
                 <Link

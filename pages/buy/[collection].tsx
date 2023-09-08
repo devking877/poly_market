@@ -1,13 +1,16 @@
 import { useContract, useNFTs } from "@thirdweb-dev/react";
 import React from "react";
-import Container from "../components/Container/Container";
-import NFTGrid from "../components/NFT/NFTGrid";
-import { NFT_COLLECTION_ADDRESS } from "../const/contractAddresses";
+import Container from "../../components/Container/Container";
+import NFTGrid from "../../components/NFT/NFTGrid";
+import { useRouter } from "next/router";
 
 export default function Buy() {
   // Load all of the NFTs from the NFT Collection
-  const { contract } = useContract(NFT_COLLECTION_ADDRESS);
+  const router=useRouter();
+  const {collection} = router.query;
+  const { contract } = useContract(collection);
   const { data, isLoading } = useNFTs(contract);
+  //console.log(collection);
 
   return (
     <Container maxWidth="lg">
@@ -16,6 +19,7 @@ export default function Buy() {
       <NFTGrid
         data={data}
         isLoading={isLoading}
+        collection={collection}
         emptyText={
           "Looks like there are no NFTs in this collection. Did you import your contract on the thirdweb dashboard? https://thirdweb.com/dashboard"
         }
