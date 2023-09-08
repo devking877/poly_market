@@ -33,7 +33,8 @@ const [randomColor1, randomColor2] = [randomColor(), randomColor()];
 
 export default function TokenPage({ nft, contractMetadata }: Props) {
   const router=useRouter();
-  const {collectionAddr} = router.query;
+  const {collection} = router.query;
+  const collectionAddr=new String(collection).toString();
 
   const [bidValue, setBidValue] = useState<string>();
 
@@ -393,12 +394,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
   // const contract = await sdk.getContract(collectionAddr);
 
   // const nfts = await contract.erc721.getAll();
-  const nfts=[];
+  const nfts : any[]=[];
 
   const paths = nfts.map((nft) => {
     return {
       params: {
-        contractAddress: collectionAddr,
+        contractAddress: "collectionAddr",
         tokenId: nft.metadata.id,
       },
     };

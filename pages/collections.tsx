@@ -6,10 +6,11 @@ import Link from "next/link";
 import styles from "../styles/Buy.module.css";
 
 type Props = {
-    collection:string;
+    collection: string,
+    key: Number;
 };
   
-function GetCollections({collection} : Props) {
+function GetCollections({collection, key} : Props) {
     const {contract}=useContract(collection);
     const {data: contractMetadata, isLoading}=useContractMetadata(contract);
     return (
@@ -32,8 +33,8 @@ export default function Buy() {
       <h1>Collections</h1>
         <div className={styles.nftGridContainer}>
             {
-                collections.map((collection) => (
-                    <GetCollections collection={collection}></GetCollections>
+                collections.map((collection, ind) => (
+                    <GetCollections collection={collection} key={ind}></GetCollections>
                 )
                 )
             }

@@ -12,7 +12,6 @@ import NFTGrid from "../../components/NFT/NFTGrid";
 import Skeleton from "../../components/Skeleton/Skeleton";
 import {
   MARKETPLACE_ADDRESS,
-  NFT_COLLECTION_ADDRESS,
 } from "../../const/contractAddresses";
 import styles from "../../styles/Profile.module.css";
 import randomColor from "../../util/randomColor";
@@ -26,9 +25,12 @@ const [randomColor1, randomColor2, randomColor3, randomColor4] = [
 
 export default function ProfilePage() {
   const router = useRouter();
+  const {collection} = router.query;
+  const collectionAddr=new String(collection).toString();
+
   const [tab, setTab] = useState<"nfts" | "listings" | "auctions">("nfts");
 
-  const { contract: nftCollection } = useContract(NFT_COLLECTION_ADDRESS);
+  const { contract: nftCollection } = useContract(collectionAddr);
 
   const { contract: marketplace } = useContract(
     MARKETPLACE_ADDRESS,
@@ -108,6 +110,7 @@ export default function ProfilePage() {
         <NFTGrid
           data={ownedNfts}
           isLoading={loadingOwnedNfts}
+          collection={collectionAddr}
           emptyText="Looks like you don't have any NFTs from this collection. Head to the buy page to buy some!"
         />
       </div>

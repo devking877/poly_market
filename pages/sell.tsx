@@ -7,14 +7,17 @@ import {
 import React, { useState } from "react";
 import Container from "../components/Container/Container";
 import NFTGrid from "../components/NFT/NFTGrid";
-import { NFT_COLLECTION_ADDRESS } from "../const/contractAddresses";
 import tokenPageStyles from "../styles/Token.module.css";
 import { NFT as NFTType } from "@thirdweb-dev/sdk";
 import SaleInfo from "../components/SaleInfo/SaleInfo";
+import { useRouter } from "next/router";
 
 export default function Sell() {
+  const router = useRouter();
+  const {collection} = router.query;
+  const collectionAddr=new String(collection).toString();
   // Load all of the NFTs from the NFT Collection
-  const { contract } = useContract(NFT_COLLECTION_ADDRESS);
+  const { contract } = useContract(collectionAddr);
   const address = useAddress();
   const { data, isLoading } = useOwnedNFTs(contract, address);
 
@@ -29,6 +32,7 @@ export default function Sell() {
           <NFTGrid
             data={data}
             isLoading={isLoading}
+            collection={collection}
             overrideOnclickBehavior={(nft) => {
               setSelectedNft(nft);
             }}
