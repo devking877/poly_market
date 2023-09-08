@@ -25,8 +25,7 @@ const [randomColor1, randomColor2, randomColor3, randomColor4] = [
 
 export default function ProfilePage() {
   const router = useRouter();
-  const {collection} = router.query;
-  const collectionAddr=new String(collection).toString();
+  const collectionAddr=router.query.collection;
 
   const [tab, setTab] = useState<"nfts" | "listings" | "auctions">("nfts");
 
