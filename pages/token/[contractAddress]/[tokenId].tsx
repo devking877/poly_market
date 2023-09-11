@@ -129,6 +129,9 @@ export default function TokenPage({ nft, contractMetadata }: Props) {
             />
 
             <div className={styles.descriptionContainer}>
+              <h3 className={styles.descriptionTitle}>Collection</h3>
+              <p className={styles.description}>{nft.metadata.collection}</p>
+
               <h3 className={styles.descriptionTitle}>Description</h3>
               <p className={styles.description}>{nft.metadata.description}</p>
 
